@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nezo</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Nezo</title>
+</head>
+<body>
+    <h2 style="text-align: center;">Nezo</h2>
+    <img src="" width="400" height="400" id="imgConverted" style="position:absolute;top:10%;left:50%;border:2px solid;">
+    <div style="position:absolute;top:60%; left:50%;">
+        <div style="border: 1px solid black; width: 400px;">
+            <ul id="messages" style="list-style-type: circle;"></ul>
+        </div>
+        <br>
+        <div style="position:absolute;left:20%">
+            <input type="text" id="message">
+            <button onClick="sendMsg()">Send</button>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+        crossorigin="anonymous"></script>
+    <script>
+
+        // window.onload = () => {
+        //     setInterval(function(){
+        //     send();
+        // },500);
+        // }
+
+        const socket = io();
+        const imgConverted = document.getElementById('imgConverted'); 
+
+        function sendMsg() {
+            let message = document.getElementById('message').value
+            socket.emit("message", message);
+            document.getElementById('message').value = '';
+        }
+
+        socket.on("message", function (data) {
+            let messages = document.getElementById('messages');
+            messages.innerHTML += `<li>` + data + `</li>`;
+            console.log(data);
+        });
+
+        socket.on("drawing", function (data) {
+            console.log(data);
+            imgConverted.src=data;
+            
+        });
+
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMsg();
+            }
+
+        });
+
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        let coord = { x: 0, y: 0 };
+
+        document.addEventListener("mousedown", start);
+        document.addEventListener("mouseup", stop);
+        window.addEventListener("resize", resize);
+
+        //document.addEventListener("mouseup", send)
+
+        
+
+        resize();
+
+        function resize() {
+            ctx.canvas.width = 400;
+            ctx.canvas.height = 400;
+        }
+        function reposition(event) {
+            coord.x = event.clientX - canvas.offsetLeft;
+            coord.y = event.clientY - canvas.offsetTop;
+        }
+        function start(event) {
+            document.addEventListener("mousemove", draw);
+            reposition(event);
+        }
+        function stop() {
+            document.removeEventListener("mousemove", draw);
+        }
+        function draw(event) {
+            ctx.beginPath();
+            ctx.lineWidth = 5;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "#ACD3ED";
+            ctx.moveTo(coord.x, coord.y);
+            reposition(event);
+            ctx.lineTo(coord.x, coord.y);
+            ctx.stroke();
+        }
+
+        function erase() {
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height)
+            var dataUrl = canvas.toDataURL();
+            socket.emit("drawing", dataUrl);
+        }
+
+        document.addEventListener("mouseup", send);
+
+        let sendMessageBoard = document.getElementById("sendMessageBoard");
+
+        function send() {
+            var dataUrl = canvas.toDataURL();
+            //console.log(dataUrl);
+            socket.emit("drawing", dataUrl);
+        }
+
+    </script>
+</body>
+</html>
+</body>
+</html>
