@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from engineio.payload import Payload
+import random
 
 
 app = Flask(__name__)
@@ -32,3 +33,29 @@ def print_message(message):
 @socketio.on("drawing")
 def drawing(message):
     socketio.emit("drawing", message)
+
+
+def give_random_word():
+    dictionary = [
+        "dog",
+        "cat",
+        "house",
+        "head",
+        "number",
+        "tree",
+        "sky",
+        "sun",
+        "boat",
+        "elbow",
+        "chimney",
+        "computer",
+        "flag",
+        "bird",
+        "fish",
+        "money",
+        "bow",
+        "axe",
+        "scissors",
+        "glasses",
+    ]
+    return random.choice(dictionary)
