@@ -11,7 +11,7 @@ Első alkalommal:
 
 Branch létrehozás, elnevezési konvenció:
  - git checkout -b bugfix/short_name_of_bug-issueSzám
- - git checkout -b feature/short_name-of_feature-1
+ - git checkout -b feature/short_name_of_feature-1
 
 git add :
  - git add . -> mappából minden fájlt hozzáad
