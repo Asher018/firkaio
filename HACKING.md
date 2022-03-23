@@ -1,5 +1,8 @@
 # How to hack on the codebase
 
+## IDE integration
+https://github.com/python-lsp/python-lsp-server
+
 ## Boring way
 TODO fill this :D
 Probably something with pip?
