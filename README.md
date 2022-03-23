@@ -1,7 +1,7 @@
-Firka.io projekt leírás
+**Firka.io projekt leírás**
 
 
-Basic Git parancsok: 
+**Basic Git parancsok:**
 
 Első alkalommal:
 
