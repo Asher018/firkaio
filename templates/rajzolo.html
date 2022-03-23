@@ -8,17 +8,17 @@
 </head>
 <body>
     <div id="sendMessageBoard">
-        <h2 style="position:absolute;top:0%;left:15%;">Rajzolo</h2>
+        <h2>Rajzolo</h2>
         <canvas id="canvas" width="400" height="400"
-            style="position:absolute;top:10%;left:10%;border:2px solid;" onmousemove="send()"></canvas>
+            style="border:2px solid;" onmousemove="send()"></canvas>
     </div>
-    <input type="button" value="Torles" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:10%;">
-    <div style="position:absolute;top:60%; left:10%;">
+    <input type="button" value="Torles" id="clr" size="23" onclick="erase()">
+    <div>
         <div style="border: 1px solid black; width: 400px;">
             <ul id="messages" style="list-style-type: circle;"></ul>
         </div>
         <br>
-        <div style="position:absolute;left:20%">
+        <div>
             <input type="text" id="message">
             <button onClick="sendMsg()">Send</button>
         </div>
