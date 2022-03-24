@@ -8,6 +8,13 @@ Első alkalommal:
  - git config --global user.name "Your Name"
  - git config --global user.email "youremail@yourdomain.com"
 
+Ha nem akarod véletlenül mindenhol a saját neved és hivatalos email címed használni:
+```
+git config user.name "Mike Ainsel"
+git config user.email mike@example.com
+```
+
+Pl nem jó ötlet mindenhol a studos emailedet használni, de egyetemi projekteknél pont van értelme. Szóval óvatosan a global kapcsolóval.
 
 Branch létrehozás, elnevezési konvenció:
  - git checkout -b bugfix/short_name_of_bug-issueSzám
@@ -24,6 +31,13 @@ git diff:
 
 git commit, egysoros message: 
  - git commit -m "[#1] Rövid commit leírás"
+
+előző commit javítása
+ - `git commit --amend`: hozzáadott változtatásokat is beleveszi a HEAD commitba, plusz a commit üzenetet átírhatod
+
+git rebase
+
+Történelem átírására sötét mágia, pár sorban nem lehet összefoglalni, itt olvashattok róla: https://git-rebase.io/
 
 push: 
  - git push origin bugfix/short_name_of_bug-1
