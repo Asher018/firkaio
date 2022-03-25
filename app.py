@@ -62,12 +62,10 @@ def random_word(rnd_word=""):
 def print_message(message):
     print(message)
     msg_index = int(message.index(':'))
-    msg_len = int(len(message))
-    msg_word = message[msg_index+2:msg_len]
     win_name = message[0:msg_index]
     winner_name(win_name)
     #print(f"Global_word:{global_word}, Msg_word:{msg_word}.")
-    if str(msg_word) == str(global_word):
+    if str(global_word) in str(message):
         print("equal")
         game_end()
     socketio.emit("message", message)
