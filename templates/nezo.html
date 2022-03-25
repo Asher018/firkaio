@@ -1,134 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nezo</title>
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 20%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
     <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Nezo</title>
-</head>
-<body>
-    <h2 style="text-align: center;">Nezo</h2>
-    <img src="" width="400" height="400" id="imgConverted" style="position:absolute;top:10%;left:50%;border:2px solid;">
-    <div>
-        <div style="border: 1px solid black; width: 400px;">
-            <ul id="messages" style="list-style-type: circle;"></ul>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>Nezo</title>
+    </head>
+
+    <body>
+        <h2 style="text-align: center;">Nezo</h2>
+        <img src="" width="400" height="400" id="imgConverted"
+            style="position:absolute;top:10%;left:10%;border:2px solid;">
+        <div style="position:absolute;top:10%; left:40%;">
+            <div style="border: 2px solid black; height: 400px; width: 400px;">
+                <ul id="messages" style="list-style-type: circle; max-height: 380px; overflow-y: scroll;"></ul>
+            </div>
+            <br>
+            <div style="position:absolute;left:0%">
+                <input type="text" id="message" size="45" placeholder="Type here..">
+                <button onClick="sendMsg()">Send</button>
+            </div>
+
         </div>
-        <br>
-        <div>
-            <input type="text" id="message">
-            <button onClick="sendMsg()">Send</button>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span id="close" class="close">&times;</span>
+                <p id="text" style="color: green; font-size: 10; text-align: center; font-weight: bold;">Gratulálok
+                    eltaláltad a szót!</p>
+                <button id="new_game_btn" onclick="new_game()" style="text-align: center;">Új játék</button>
+                <input type="text" style="display: none; align-items: center; position: relative; left: 25%;"
+                    id="name_input">
+                <button id="add_name_btn" onclick="set_name()"
+                    style="display: none; margin-top: 10px; position: relative; left: 40%;">Start</button>
+            </div>
         </div>
-        
-    </div>
+        <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+            integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+            crossorigin="anonymous"></script>
+        <script>
 
-    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
-        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
-        crossorigin="anonymous"></script>
-    <script>
+            window.addEventListener("load", function () {
+                const text = document.getElementById("text");
+                const name_input = document.getElementById("name_input");
+                const add_name_btn = document.getElementById("add_name_btn");
+                const new_game_btn = document.getElementById("new_game_btn");
+                new_game_btn.style.display = "none";
+                name_input.style.display = "block";
+                add_name_btn.style.display = "block";
+                modal.style.display = "block";
 
-        // window.onload = () => {
-        //     setInterval(function(){
-        //     send();
-        // },500);
-        // }
 
-        const socket = io();
-        const imgConverted = document.getElementById('imgConverted'); 
+                text.innerText = "Add meg a neved!";
+            });
 
-        function sendMsg() {
-            let message = document.getElementById('message').value
-            socket.emit("message", message);
-            document.getElementById('message').value = '';
-        }
+            const socket = io();
+            const imgConverted = document.getElementById('imgConverted');
+            var modal = document.getElementById("myModal");
+            var span = document.getElementsByClassName("close")[0];
+            var random_word;
+            var name;
 
-        socket.on("message", function (data) {
-            let messages = document.getElementById('messages');
-            messages.innerHTML += `<li>` + data + `</li>`;
-            console.log(data);
-        });
-
-        socket.on("drawing", function (data) {
-            console.log(data);
-            imgConverted.src=data;
-            
-        });
-
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMsg();
+            function set_name() {
+                name = name_input.value;
+                console.log(name);
+                name_input.style.display = "none";
+                add_name_btn.style.display = "none";
+                modal.style.display = "none";
+                new_game_btn.style.display = "block";
+                text.innerText = "Gratulálok eltaláltad a szót!";
+                //socket.emit("viewer_joinned");
+                socket.emit("give_random_word");
             }
 
-        });
 
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-        let coord = { x: 0, y: 0 };
+            function sendMsg() {
+                let message = document.getElementById('message').value
+                socket.emit("message", name + ": " + message);
+                document.getElementById('message').value = '';
+            }
 
-        document.addEventListener("mousedown", start);
-        document.addEventListener("mouseup", stop);
-        window.addEventListener("resize", resize);
+            socket.on("give_random_word", function (data) {
+                random_word = data;
+                console.log(random_word);
+            });
 
-        //document.addEventListener("mouseup", send)
+            socket.on("message", function (data) {
+                let messages = document.getElementById('messages');
+                messages.innerHTML += `<li>` + data + `</li>`;
+            });
 
-        
+            socket.on("drawing", function (data) {
+                //console.log(data);
+                imgConverted.src = data;
 
-        resize();
+            });
 
-        function resize() {
-            ctx.canvas.width = 400;
-            ctx.canvas.height = 400;
-        }
-        function reposition(event) {
-            coord.x = event.clientX - canvas.offsetLeft;
-            coord.y = event.clientY - canvas.offsetTop;
-        }
-        function start(event) {
-            document.addEventListener("mousemove", draw);
-            reposition(event);
-        }
-        function stop() {
-            document.removeEventListener("mousemove", draw);
-        }
-        function draw(event) {
-            ctx.beginPath();
-            ctx.lineWidth = 5;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = "#ACD3ED";
-            ctx.moveTo(coord.x, coord.y);
-            reposition(event);
-            ctx.lineTo(coord.x, coord.y);
-            ctx.stroke();
-        }
+            socket.on("winner_name", function(data){
+                if(data!=name){
+                    text.innerText= "Eltalálták a szót!";
+                }else{
+                    text.innerText= "Gratulálok eltaláltad a szót!";
+                }
+            });
 
-        function erase() {
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height)
-            var dataUrl = canvas.toDataURL();
-            socket.emit("drawing", dataUrl);
-        }
+            socket.on("game_end", function (data) {
+                modal.style.display = "block";
+            });
 
-        document.addEventListener("mouseup", send);
+            socket.on("new_game", function(){
+                modal.style.display = "none";
+            });
 
-        let sendMessageBoard = document.getElementById("sendMessageBoard");
+            document.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMsg();
+                }
 
-        function send() {
-            var dataUrl = canvas.toDataURL();
-            //console.log(dataUrl);
-            socket.emit("drawing", dataUrl);
-        }
+            });
 
-    </script>
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+            let coord = { x: 0, y: 0 };
+
+            document.addEventListener("mousedown", start);
+            document.addEventListener("mouseup", stop);
+            window.addEventListener("resize", resize);
+
+            //document.addEventListener("mouseup", send)
+
+
+
+            resize();
+
+            function resize() {
+                ctx.canvas.width = 400;
+                ctx.canvas.height = 400;
+            }
+            function reposition(event) {
+                coord.x = event.clientX - canvas.offsetLeft;
+                coord.y = event.clientY - canvas.offsetTop;
+            }
+            function start(event) {
+                document.addEventListener("mousemove", draw);
+                reposition(event);
+            }
+            function stop() {
+                document.removeEventListener("mousemove", draw);
+            }
+            function draw(event) {
+                ctx.beginPath();
+                ctx.lineWidth = 5;
+                ctx.lineCap = "round";
+                ctx.strokeStyle = "#ACD3ED";
+                ctx.moveTo(coord.x, coord.y);
+                reposition(event);
+                ctx.lineTo(coord.x, coord.y);
+                ctx.stroke();
+            }
+
+            function erase() {
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                var dataUrl = canvas.toDataURL();
+                socket.emit("drawing", dataUrl);
+            }
+
+            document.addEventListener("mouseup", send);
+
+            let sendMessageBoard = document.getElementById("sendMessageBoard");
+
+            function send() {
+                var dataUrl = canvas.toDataURL();
+                //console.log(dataUrl);
+                socket.emit("drawing", dataUrl);
+            }
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            function new_game() {
+                socket.emit("new_game");
+            }
+
+        </script>
+    </body>
+
+    </html>
 </body>
-</html>
-</body>
-</html>
+</html>

@@ -5,41 +5,121 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rajzolo</title>
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 20%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div id="sendMessageBoard">
-        <h2>Rajzolo</h2>
+        <h2 style="position:absolute;top:0%;left:15%;">Rajzolo</h2>
+        <span style="position:absolute; top: 8%; left: 20%; font-size: 20px; font-weight: bold;" id="rnd_word"></span>
         <canvas id="canvas" width="400" height="400"
             style="border:2px solid;" onmousemove="send()"></canvas>
     </div>
-    <input type="button" value="Torles" id="clr" size="23" onclick="erase()">
-    <div>
-        <div style="border: 1px solid black; width: 400px;">
-            <ul id="messages" style="list-style-type: circle;"></ul>
+    <input type="button" value="Torles" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:10%;">
+    <div style="position:absolute;top:10%; left:40%;">
+        <div style="border: 2px solid black; height: 400px; width: 400px;">
+            <ul id="messages" style="list-style-type: circle; max-height: 380px; overflow-y: scroll;"></ul>
         </div>
         <br>
-        <div>
-            <input type="text" id="message">
+        <div style="position:absolute;left:0%">
+            <input type="text" id="message" size="45" placeholder="Type here..">
             <button onClick="sendMsg()">Send</button>
         </div>
         
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span id="close" class="close">&times;</span>
+            <p style="color: green; font-size: 10; text-align: center; font-weight: bold;" id="text">Eltalálták a szót!</p>
+            <input type="text" style="display: none; align-items: center; position: relative; left: 25%;" id="name_input">
+            <button id="add_name_btn" onclick="set_name()" style="display: none; margin-top: 10px; position: relative; left: 40%;">Start</button>
+        </div>
     </div>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
         integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
         crossorigin="anonymous"></script>
     <script>
-        // window.onload = () => {
-        //     setInterval(function(){
-        //     send();
-        // },500);
-        // }
+
+        window.addEventListener('load', function(){
+            const text = document.getElementById("text");
+            const name_input = document.getElementById("name_input");
+            const add_name_btn = document.getElementById("add_name_btn");
+            name_input.style.display = "block";
+            add_name_btn.style.display = "block";
+            modal.style.display = "block";
+            text.innerText="Add meg a neved!";
+        });
 
         const socket = io();
-        const imgConverted = document.getElementById('imgConverted'); 
+        const imgConverted = document.getElementById('imgConverted');
+        const span = document.getElementById("rnd_word");
+        var modal = document.getElementById("myModal");
+        var spn = document.getElementsByClassName("close")[0];
+        var name;
+
+        function set_name(){
+            name=name_input.value;
+            console.log(name);
+            name_input.style.display = "none";
+            add_name_btn.style.display = "none";
+            modal.style.display = "none";
+            text.innerText = "Eltalálták a szót!";
+        }
+
+        function giveRandomWord(){
+            socket.emit("give_random_word");
+        }
 
         function sendMsg() {
-            let message = document.getElementById('message').value
-            socket.emit("message", message);
+            let message = document.getElementById('message').values
+            socket.emit("message", name+": "+message);
             document.getElementById('message').value = '';
         }
 
@@ -53,6 +133,26 @@
             console.log(data);
             imgConverted.src=data;
             
+        });
+
+        socket.on("give_random_word", function (data){
+            console.log(data);
+            random_word=data;
+            span.innerText=data;
+        });
+
+        socket.on("game_end", function (data){
+            modal.style.display="block";
+        });
+
+        socket.on("new_game", function(){
+            modal.style.display = "none";
+            erase();
+            giveRandomWord();
+        });
+
+        socket.on("viewer_joinned", function(){
+            //giveRandomWord();
         });
 
         document.addEventListener('keypress', function (e) {
@@ -109,7 +209,7 @@
             socket.emit("drawing", dataUrl);
         }
 
-        document.addEventListener("mouseup", send);
+        //document.addEventListener("onmousemove", send);
 
         let sendMessageBoard = document.getElementById("sendMessageBoard");
 
@@ -122,4 +222,4 @@
 
     </script>
 </body>
-</html>
+</html>
