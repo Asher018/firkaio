@@ -1,0 +1,437 @@
+[1mdiff --git a/develop/.gitignore b/develop/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8d35cb3[m
+[1m--- /dev/null[m
+[1m+++ b/develop/.gitignore[m
+[36m@@ -0,0 +1,2 @@[m
+[32m+[m[32m__pycache__[m
+[32m+[m[32m*.pyc[m
+[1mdiff --git a/develop/HACKING.md b/develop/HACKING.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8a960a6[m
+[1m--- /dev/null[m
+[1m+++ b/develop/HACKING.md[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32m# How to hack on the codebase[m
+[32m+[m
+[32m+[m[32m## IDE integration[m
+[32m+[m[32mhttps://github.com/python-lsp/python-lsp-server[m
+[32m+[m
+[32m+[m[32m## Boring way[m
+[32m+[m[32mTODO fill this :D[m
+[32m+[m[32mProbably something with pip?[m
+[32m+[m[32mUse repo packages though if you can.[m
+[32m+[m
+[32m+[m[32m## Cool Guix way[m
+[32m+[m[32m1. [Install Guix (duh).](https://guix.gnu.org/en/manual/devel/en/html_node/Installation.html#Installation)[m
+[32m+[m[32m2. Enter a developer shell with: `guix shell -m guix.scm`[m
+[32m+[m
+[32m+[m[32mDone, now you can `flask run`[m
+[32m+[m
+[32m+[m[32mIf you also want to use an IDE that supports the Language Server Protocol, use: `guix shell -m guix.scm python-lsp-server kak-lsp`[m
+[32m+[m[32mThis assumes Kakoune as text editor. If you aren't using Kakoune, skip `kak-lsp` and look up how to set LSP up.[m
+[1mdiff --git a/develop/Procfile b/develop/Procfile[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a3670b9[m
+[1m--- /dev/null[m
+[1m+++ b/develop/Procfile[m
+[36m@@ -0,0 +1 @@[m
+[32m+[m[32mweb: gunicorn -k eventlet -w 1 app:app[m
+\ No newline at end of file[m
+[1mdiff --git a/develop/README.md b/develop/README.md[m
+[1mnew file mode 100644[m
+[1mindex 0000000..77db309[m
+[1m--- /dev/null[m
+[1m+++ b/develop/README.md[m
+[36m@@ -0,0 +1,61 @@[m
+[32m+[m[32m**Firka.io projekt leírás**[m
+[32m+[m
+[32m+[m
+[32m+[m[32m## Basic Git parancsok[m
+[32m+[m
+[32m+[m[32m### Első alkalommal[m
+[32m+[m[32m```[m
+[32m+[m[32mgit config --global user.name "Your Name"[m
+[32m+[m[32mgit config --global user.email "youremail@yourdomain.com"[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mHa nem akarod véletlenül mindenhol a saját neved és hivatalos email címed használni:[m
+[32m+[m[32m```[m
+[32m+[m[32mgit config user.name "Mike Ainsel"[m
+[32m+[m[32mgit config user.email mike@example.com[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m[32mPl nem jó ötlet mindenhol a studos emailedet használni, de egyetemi projekteknél pont van értelme. Szóval óvatosan a global kapcsolóval.[m
+[32m+[m
+[32m+[m[32m### Branch létrehozás, elnevezési konvenció:[m
+[32m+[m[32m - `git checkout -b bugfix/short_name_of_bug-issueSzám`[m
+[32m+[m[32m - `git checkout -b feature/short_name_of_feature-1`[m
+[32m+[m
+[32m+[m[32m### git add[m
+[32m+[m[32m - `git add .` -> mappából minden fájlt hozzáad[m
+[32m+[m[32m - `git add -A` -> minden fájlt hozzáad[m
+[32m+[m[32m - `git add -u` -> csak tracked file-ok hozzáadása[m
+[32m+[m[32m - `git add -p` -> módosítások kiválasztása[m
+[32m+[m
+[32m+[m[32m### git diff[m
+[32m+[m[32m - `git diff --cached` -> hozzáadott módosítások átnézése[m
+[32m+[m
+[32m+[m[32m### git commit, egysoros message:[m[41m [m
+[32m+[m[32m - `git commit -m "[#1] Rövid commit leírás"`[m
+[32m+[m
+[32m+[m[32m### előző commit javítása[m
+[32m+[m[32m - `git commit --amend`: hozzáadott változtatásokat is beleveszi a HEAD commitba, plusz a commit üzenetet átírhatod[m
+[32m+[m
+[32m+[m[32m### git rebase[m
+[32m+[m
+[32m+[m[32mTörténelem átírására sötét mágia, pár sorban nem lehet összefoglalni, itt olvashattok róla: https://git-rebase.io/[m
+[32m+[m
+[32m+[m[32m### push:[m[41m [m
+[32m+[m[32m - `git push origin bugfix/short_name_of_bug-1`[m
+[32m+[m[32m -  - csak első alkalommal kell a branch, utána elég a git push[m
+[32m+[m
+[32m+[m[32m### Merge request:[m
+[32m+[m[32m - push-t követően terminálban kidob egy linket az MR-hez ahol véglegesíteni lehet azt[m
+[32m+[m
+[32m+[m[32m### Git reset:[m
+[32m+[m[32m - `git reset --soft HEAD~`[m
+[32m+[m[32m - - lokális branchről visszavonja a legutóbbi commitot[m
+[32m+[m[32m - `git reset --hard HEAD~1`[m
+[32m+[m[32m - - minden nem commitolt változás + az előző commit elveszik[m
+[32m+[m
+[32m+[m[32m### Local branch törlése[m
+[32m+[m[32m - `git branch -d <local-branch>`[m
+[32m+[m[32m - `-D` megerősíteni[m
+[32m+[m
+[32m+[m[32m### Remote branch törlés[m
+[32m+[m[32m - `git push origin --delete <branch>`[m
+[1mdiff --git a/develop/app.py b/develop/app.py[m
+[1mnew file mode 100644[m
+[1mindex 0000000..c492dc0[m
+[1m--- /dev/null[m
+[1m+++ b/develop/app.py[m
+[36m@@ -0,0 +1,101 @@[m
+[32m+[m[32mimport imp[m
+[32m+[m[32mfrom flask import Flask, render_template[m
+[32m+[m[32mfrom flask_socketio import SocketIO[m
+[32m+[m[32mfrom engineio.payload import Payload[m
+[32m+[m[32mimport random[m
+[32m+[m[32mfrom eventlet import wsgi[m
+[32m+[m[32mimport eventlet[m
+[32m+[m
+[32m+[m
+[32m+[m[32mapp = Flask(__name__)[m
+[32m+[m[32m# Payload.max_decode_packets = 999999[m
+[32m+[m[32msocketio = SocketIO(app)[m
+[32m+[m
+[32m+[m[32m@app.route("/")[m
+[32m+[m[32mdef index():[m
+[32m+[m[32m    return render_template("index.html")[m
+[32m+[m
+[32m+[m
+[32m+[m[32m@app.route("/nezo")[m
+[32m+[m[32mdef nezo():[m
+[32m+[m[32m    return render_template("nezo.html")[m
+[32m+[m
+[32m+[m
+[32m+[m[32m@app.route("/rajzolo")[m
+[32m+[m[32mdef rajzolo():[m
+[32m+[m[32m    return render_template("rajzolo.html")[m
+[32m+[m
+[32m+[m[32mdef give_random_word():[m
+[32m+[m[32m    dictionary = [[m
+[32m+[m[32m        "dog",[m
+[32m+[m[32m        "cat",[m
+[32m+[m[32m        "house",[m
+[32m+[m[32m        "head",[m
+[32m+[m[32m        "number",[m
+[32m+[m[32m        "tree",[m
+[32m+[m[32m        "sky",[m
+[32m+[m[32m        "sun",[m
+[32m+[m[32m        "boat",[m
+[32m+[m[32m        "elbow",[m
+[32m+[m[32m        "chimney",[m
+[32m+[m[32m        "computer",[m
+[32m+[m[32m        "flag",[m
+[32m+[m[32m        "bird",[m
+[32m+[m[32m        "fish",[m
+[32m+[m[32m        "money",[m
+[32m+[m[32m        "bow",[m
+[32m+[m[32m        "axe",[m
+[32m+[m[32m        "scissors",[m
+[32m+[m[32m        "glasses",[m
+[32m+[m[32m    ][m
+[32m+[m[32m    return random.choice(dictionary)[m
+[32m+[m
+[32m+[m
+[32m+[m[32m@socketio.on("give_random_word")[m
+[32m+[m[32mdef random_word(rnd_word=""):[m
+[32m+[m[32m    global global_word[m
+[32m+[m[32m    global_word=give_random_word()[m
+[32m+[m[32m    #print(f"fgv belül: {global_word}")[m
+[32m+[m[32m    socketio.emit("give_random_word", global_word)[m
+[32m+[m
+[32m+[m[32m@socketio.on("message")[m
+[32m+[m[32mdef print_message(message):[m
+[32m+[m[32m    print(message)[m
+[32m+[m[32m    msg_index = int(message.index(':'))[m
+[32m+[m[32m    win_name = message[0:msg_index][m
+[32m+[m[32m    winner_name(win_name)[m
+[32m+[m[32m    #print(f"Global_word:{global_word}, Msg_word:{msg_word}.")[m
+[32m+[m[32m    if str(global_word) in str(message):[m
+[32m+[m[32m        print("equal")[m
+[32m+[m[32m        game_end()[m
+[32m+[m[32m    socketio.emit("message", message)[m
+[32m+[m
+[32m+[m
+[32m+[m[32m@socketio.on("drawing")[m
+[32m+[m[32mdef drawing(message):[m
+[32m+[m[32m    socketio.emit("drawing", message)[m
+[32m+[m
+[32m+[m[32m@socketio.on("game_end")[m
+[32m+[m[32mdef game_end():[m
+[32m+[m[32m    print("Game over")[m
+[32m+[m[32m    socketio.emit("game_end")[m
+[32m+[m
+[32m+[m[32m@socketio.on("winner_name")[m
+[32m+[m[32mdef winner_name(name):[m
+[32m+[m[32m    socketio.emit("winner_name", name)[m
+[32m+[m
+[32m+[m[32m@socketio.on("new_game")[m
+[32m+[m[32mdef new_game():[m
+[32m+[m[32m    socketio.emit("new_game")[m
+[32m+[m
+[32m+[m[32m@socketio.on("viewer_joinned")[m
+[32m+[m[32mdef viewer_joinned():[m
+[32m+[m[32m    print("viewer_joinned")[m
+[32m+[m[32m    #random_word()[m
+[32m+[m[32m    socketio.emit("viewer_joinned")[m
+[32m+[m
+[32m+[m[32mif __name__ == '__main__':[m
+[32m+[m[32m  app.debug=True[m
+[32m+[m[32m  wsgi.server(eventlet.listen(('',8080)), app)[m
+[32m+[m
+[32m+[m
+[1mdiff --git a/develop/guix.scm b/develop/guix.scm[m
+[1mnew file mode 100644[m
+[1mindex 0000000..eea5e4c[m
+[1m--- /dev/null[m
+[1m+++ b/develop/guix.scm[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32m(specifications->manifest[m
+[32m+[m[32m (list[m
+[32m+[m[32m  "gunicorn"[m
+[32m+[m[32m  "python"[m
+[32m+[m[32m  "python-eventlet"[m
+[32m+[m[32m  "python-flask"[m
+[32m+[m[32m  "python-flask-socketio"))[m
+[1mdiff --git a/develop/requirements.txt b/develop/requirements.txt[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8db6afd[m
+[1m--- /dev/null[m
+[1m+++ b/develop/requirements.txt[m
+[36m@@ -0,0 +1,4 @@[m
+[32m+[m[32meventlet==0.30.2[m
+[32m+[m[32mFlask==2.0.3[m
+[32m+[m[32mFlask-SocketIO==5.1.1[m
+[32m+[m[32mgunicorn==20.1.0[m
+[1mdiff --git a/develop/route.js b/develop/route.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ee76b3e[m
+[1m--- /dev/null[m
+[1m+++ b/develop/route.js[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32mfunction openRajzolo(){[m
+[32m+[m[32m    window.open("/rajzolo")[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/develop/templates/index.html b/develop/templates/index.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..0a6b484[m
+[1m--- /dev/null[m
+[1m+++ b/develop/templates/index.html[m
+[36m@@ -0,0 +1,37 @@[m
+[32m+[m[32m<!DOCTYPE html>[m
+[32m+[m[32m<html lang="en">[m
+[32m+[m[32m<head>[m
+[32m+[m[32m    <meta charset="UTF-8">[m
+[32m+[m[32m    <meta http-equiv="X-UA-Compatible" content="IE=edge">[m
+[32m+[m[32m    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[32m+[m[32m    <link rel="stylesheet" href="style.css">[m
+[32m+[m[32m    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">[m
+[32m+[m[32m    <title>Welcome index page</title>[m
+[32m+[m[32m    <style>[m
+[32m+[m[32m        a{[m
+[32m+[m[32m            color: whitesmoke;[m
+[32m+[m[32m            text-decoration: none;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        button{[m
+[32m+[m[32m            font-size: 100px;[m
+[32m+[m[32m        }[m
+[32m+[m[32m    </style>[m
+[32m+[m[32m</head>[m
+[32m+[m[32m<body>[m
+[32m+[m[32m    <div class="row justify-content-center">[m
+[32m+[m[32m        <h1 style="color: blue">FirkaIO</h1>[m
+[32m+[m[32m    </div>[m
+[32m+[m[32m    <div class="d-flex align-items-center justify-content-center align-middle">[m
+[32m+[m[32m        <form action="/rajzolo">[m
+[32m+[m[32m            <button class="btn btn-primary btn-lg">Rajzoló</button>[m
+[32m+[m[32m        </form>[m
+[32m+[m[32m        <form action="/nezo">[m
+[32m+[m[32m            <button class="btn btn-danger btn-lg">Nező</button>[m
+[32m+[m[32m        </form>[m
+[32m+[m[41m        [m
+[32m+[m[32m    </div>[m
+[32m+[m[32m    <script>[m
+[32m+[m[41m        [m
+[32m+[m[32m    </script>[m
+[32m+[m[32m</body>[m
+[32m+[m[32m</html>[m
+\ No newline at end of file[m
+[1mdiff --git a/develop/templates/nezo.html b/develop/templates/nezo.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..2201c3e[m
+[1m--- /dev/null[m
+[1m+++ b/develop/templates/nezo.html[m
+[36m@@ -0,0 +1,261 @@[m
+[32m+[m[32m<!DOCTYPE html>[m[41m[m
+[32m+[m[32m<html lang="en">[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m<head>[m[41m[m
+[32m+[m[32m    <meta charset="UTF-8">[m[41m[m
+[32m+[m[32m    <meta http-equiv="X-UA-Compatible" content="IE=edge">[m[41m[m
+[32m+[m[32m    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m[41m[m
+[32m+[m[32m    <title>Nezo</title>[m[41m[m
+[32m+[m[32m    <style>[m[41m[m
+[32m+[m[32m        /* The Modal (background) */[m[41m[m
+[32m+[m[32m        .modal {[m[41m[m
+[32m+[m[32m            display: none;[m[41m[m
+[32m+[m[32m            /* Hidden by default */[m[41m[m
+[32m+[m[32m            position: fixed;[m[41m[m
+[32m+[m[32m            /* Stay in place */[m[41m[m
+[32m+[m[32m            z-index: 1;[m[41m[m
+[32m+[m[32m            /* Sit on top */[m[41m[m
+[32m+[m[32m            left: 0;[m[41m[m
+[32m+[m[32m            top: 0;[m[41m[m
+[32m+[m[32m            width: 100%;[m[41m[m
+[32m+[m[32m            /* Full width */[m[41m[m
+[32m+[m[32m            height: 100%;[m[41m[m
+[32m+[m[32m            /* Full height */[m[41m[m
+[32m+[m[32m            overflow: auto;[m[41m[m
+[32m+[m[32m            /* Enable scroll if needed */[m[41m[m
+[32m+[m[32m            background-color: rgb(0, 0, 0);[m[41m[m
+[32m+[m[32m            /* Fallback color */[m[41m[m
+[32m+[m[32m            background-color: rgba(0, 0, 0, 0.4);[m[41m[m
+[32m+[m[32m            /* Black w/ opacity */[m[41m[m
+[32m+[m[32m        }[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        /* Modal Content/Box */[m[41m[m
+[32m+[m[32m        .modal-content {[m[41m[m
+[32m+[m[32m            background-color: #fefefe;[m[41m[m
+[32m+[m[32m            margin: 15% auto;[m[41m[m
+[32m+[m[32m            /* 15% from the top and centered */[m[41m[m
+[32m+[m[32m            padding: 20px;[m[41m[m
+[32m+[m[32m            border: 1px solid #888;[m[41m[m
+[32m+[m[32m            width: 20%;[m[41m[m
+[32m+[m[32m            /* Could be more or less, depending on screen size */[m[41m[m
+[32m+[m[32m        }[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        /* The Close Button */[m[41m[m
+[32m+[m[32m        .close {[m[41m[m
+[32m+[m[32m            color: #aaa;[m[41m[m
+[32m+[m[32m            float: right;[m[41m[m
+[32m+[m[32m            font-size: 28px;[m[41m[m
+[32m+[m[32m            font-weight: bold;[m[41m[m
+[32m+[m[32m        }[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        .close:hover,[m[41m[m
+[32m+[m[32m        .close:focus {[m[41m[m
+[32m+[m[32m            color: black;[m[41m[m
+[32m+[m[32m            text-decoration: none;[m[41m[m
+[32m+[m[32m            cursor: pointer;[m[41m[m
+[32m+[m[32m        }[m[41m[m
+[32m+[m[32m    </style>[m[41m[m
+[32m+[m[32m</head>[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m<body>[m[41m[m
+[32m+[m[32m    <!DOCTYPE html>[m[41m[m
+[32m+[m[32m    <html lang="en">[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    <head>[m[41m[m
+[32m+[m[32m        <meta charset="UTF-8">[m[41m[m
+[32m+[m[32m        <meta http-equiv="X-UA-Compatible" content="IE=edge">[m[41m[m
+[32m+[m[32m        <meta name="viewport" content="width=device-width, initial-scale=1.0">[m[41m[m
+[32m+[m[32m        <link rel="stylesheet" href="style.css">[m[41m[m
+[32m+[m[32m        <title>Nezo</title>[m[41m[m
+[32m+[m[32m    </head>[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m    <body>[m[41m[m
+[32m+[m[32m        <h2 style="text-align: center;">Nezo</h2>[m[41m[m
+[32m+[m[32m        <img src="" width="400" height="400" id="imgConverted"[m[41m[m
+[32m+[m[32m            style="position:absolute;top:10%;left:10%;border:2px solid;">[m[41m[m
+[32m+[m[32m        <div style="position:absolute;top:10%; left:40%;">[m[41m[m
+[32m+[m[32m            <div style="border: 2px solid black; height: 400px; width: 400px;">[m[41m[m
+[32m+[m[32m                <ul id="messages" style="list-style-type: circle; max-height: 380px; overflow-y: scroll;"></ul>[m[41m[m
+[32m+[m[32m            </div>[m[41m[m
+[32m+[m[32m            <br>[m[41m[m
+[32m+[m[32m            <div style="position:absolute;left:0%">[m[41m[m
+[32m+[m[32m                <input type="text" id="message" size="45" placeholder="Type here..">[m[41m[m
+[32m+[m[32m                <button onClick="sendMsg()">Send</button>[m[41m[m
+[32m+[m[32m            </div>[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m        </div>[m[41m[m
+[32m+[m[32m        <div id="myModal" class="modal">[m[41m[m
+[32m+[m[32m            <div class="modal-content">[m[41m[m
+[32m+[m[32m                <span id="close" class="close">&times;</span>[m[41m[m
+[32m+[m[32m                <p id="text" style="color: green; font-size: 10; text-align: center; font-weight: bold;">Gratulálok[m[41m[m
+[32m+[m[32m                    eltaláltad a szót!</p>[m[41m[m
+[32m+[m[32m                <button id="new_game_btn" onclick="new_game()" style="text-align: center;">Új játék</button>[m[41m[m
+[32m+[m[32m                <input type="text" style="display: none; align-items: center; position: relative; left: 25%;"[m[41m[m
+[32m+[m[32m                    id="name_input">[m[41m[m
+[32m+[m[32m                <button id="add_name_btn" onclick="set_name()"[m[41m[m
+[32m+[m[32m                    style="display: none; margin-top: 10px; position: relative; left: 40%;">Start</button>[m[41m[m
+[32m+[m[32m            </div>[m[41m[m
+[32m+[m[32m        </div>[m[41m[m
+[32m+[m[32m        <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"[m[41m[m
+[32m+[m[32m            integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"[m[41m[m
+[32m+[m[32m            crossorigin="anonymous"></script>[m[41m[m
+[32m+[m[32m        <script>[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m            window.addEventListener("load", function () {[m[41m[m
+[32m+[m[32m                const text = document.getElementById("text");[m[41m[m
+[32m+[m[32m                const name_input = document.getElementById("name_input");[m[41m[m
+[32m+[m[32m                const add_name_btn = document.getElementById("add_name_btn");[m[41m[m
+[32m+[m[32m                const new_game_btn = document.getElementById("new_game_btn");[m[41m[m
+[32m+[m[32m                new_game_btn.style.display = "none";[m[41m[m
+[32m+[m[32m                name_input.style.display = "block";[m[41m[m
+[32m+[m[32m                add_name_btn.style.display = "block";[m[41m[m
+[32m+[m[32m                modal.style.display = "block";[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m                text.innerText = "Add meg a neved!";[m[41m[m
+[32m+[m[32m            });[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m            const socket = io();[m[41m[m
+[32m+[m[32m            const imgConverted = document.getElementById('imgConverted');[m[41m[m
+[32m+[m[32m            var modal = document.getElementById("myModal");[m[41m[m
+[32m+[m[32m            var span = document.getElementsByClassName("close")[0];[m[41m[m
+[32m+[m[32m            var random_word;[m[41m[m
+[32m+[m[32m            var name;[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m            function set_name() {[m[41m[m
+[32m+[m[32m                name = name_input.value;[m[41m[m
+[32m+[m[32m                console.log(name);[m[41m[m
+[32m+[m[32m                name_input.style.display = "none";[m[41m[m
+[32m+[m[32m                add_name_btn.style.display = "none";[m[41m[m
+[32m+[m[32m                modal.style.display = "none";[m[41m[m
+[32m+[m[32m                new_game_btn.style.display = "block";[m[41m[m
+[32m+[m[32m                text.innerText = "Gratulálok eltaláltad a szót!";[m[41m[m
+[32m+[m[32m                //socket.emit("viewer_joinned");[m[41m[m
+[32m+[m[32m                socket.emit("give_random_word");[m[41m[m
+[32m+[m[32m            }[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+[32m+[m[32m            function sendMsg() {[m[41m[m
+[32m+[m[32m                let message = document.getElementById('message').value[m[41m[m
+[32m+[m[32m                socket.emit("me
