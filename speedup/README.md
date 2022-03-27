@@ -1,3 +1,0 @@
-# Project Title
-
-firka.io
